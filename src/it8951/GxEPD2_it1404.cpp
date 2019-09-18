@@ -1,10 +1,10 @@
 // Display Library for SPI e-paper panels from Dalian Good Display and boards from Waveshare.
 // Requires HW SPI and Adafruit_GFX. Caution: these e-papers require 3.3V supply AND data lines!
 //
-// GxEPD2_it60 class is based on Demo Example from Waveshare for Raspberry PI https://github.com/waveshare/IT8951/archive/master.zip
+// GxEPD2_it1404 class is based on Demo Example from Waveshare for Raspberry PI https://github.com/waveshare/IT8951/archive/master.zip
 // Controller: IT8951 : https://www.waveshare.com/w/upload/1/18/IT8951_D_V0.2.4.3_20170728.pdf
 //
-// The GxEPD2_it60 driver class supports the Waveshare e-Paper IT8951 Driver HAT connected with SPI for the ED060SCT 6" e-paper panel (parallel IF)
+// The GxEPD2_it1404 driver class supports the Waveshare e-Paper IT8951 Driver HAT connected with SPI for the ED060SCT 6" e-paper panel (parallel IF)
 // https://www.waveshare.com/product/mini-pc/raspberry-pi/hats/6inch-e-paper-hat.htm
 // This Driver HAT requires 5V power supply but works with 3.3V data lines; requires both MOSI and MISO SPI lines.
 //
@@ -14,7 +14,7 @@
 //
 // Library: https://github.com/ZinggJM/GxEPD2
 
-#include "GxEPD2_it60.h"
+#include "GxEPD2_it1404.h"
 
 #define VCOM  1500 //e.g. -1.53 = 1530 = 0x5FA
 
@@ -55,19 +55,19 @@
 #define MCSR_BASE_ADDR 0x0200
 #define LISAR (MCSR_BASE_ADDR + 0x0008)
 
-GxEPD2_it60::GxEPD2_it60(int8_t cs, int8_t dc, int8_t rst, int8_t busy) :
+GxEPD2_it1404::GxEPD2_it1404(int8_t cs, int8_t dc, int8_t rst, int8_t busy) :
   GxEPD2_EPD(cs, dc, rst, busy, LOW, 10000000, WIDTH, HEIGHT, panel, hasColor, hasPartialUpdate, hasFastPartialUpdate),
   _spi_settings(24000000, MSBFIRST, SPI_MODE0),
   _spi_settings_for_read(1000000, MSBFIRST, SPI_MODE0)
 {
 }
 
-void GxEPD2_it60::init(uint32_t serial_diag_bitrate)
+void GxEPD2_it1404::init(uint32_t serial_diag_bitrate)
 {
   init(serial_diag_bitrate, true, false);
 }
 
-void GxEPD2_it60::init(uint32_t serial_diag_bitrate, bool initial, bool pulldown_rst_mode)
+void GxEPD2_it1404::init(uint32_t serial_diag_bitrate, bool initial, bool pulldown_rst_mode)
 {
   GxEPD2_EPD::init(serial_diag_bitrate, initial, pulldown_rst_mode);
 
@@ -111,7 +111,7 @@ void GxEPD2_it60::init(uint32_t serial_diag_bitrate, bool initial, bool pulldown
   printf("VCOM = -%.02fV\n", (float)_IT8951GetVCOM() / 1000);
 }
 
-void GxEPD2_it60::clearScreen(uint8_t value)
+void GxEPD2_it1404::clearScreen(uint8_t value)
 {
   _initial_write = false; // initial full screen buffer clean done
   if (_initial_refresh) _Init_Full();
@@ -136,13 +136,13 @@ void GxEPD2_it60::clearScreen(uint8_t value)
   _refresh(0, 0, WIDTH, HEIGHT, false);
 }
 
-void GxEPD2_it60::writeScreenBuffer(uint8_t value)
+void GxEPD2_it1404::writeScreenBuffer(uint8_t value)
 {
   if (_initial_refresh) clearScreen(value);
   else _writeScreenBuffer(value);
 }
 
-void GxEPD2_it60::_writeScreenBuffer(uint8_t value)
+void GxEPD2_it1404::_writeScreenBuffer(uint8_t value)
 {
   _initial_write = false; // initial full screen buffer clean done
   if (!_using_partial_mode) _Init_Part();
@@ -164,7 +164,7 @@ void GxEPD2_it60::_writeScreenBuffer(uint8_t value)
   _waitWhileBusy2("_writeScreenBuffer load end", default_wait_time);
 }
 
-void GxEPD2_it60::writeImage(const uint8_t bitmap[], int16_t x, int16_t y, int16_t w, int16_t h, bool invert, bool mirror_y, bool pgm)
+void GxEPD2_it1404::writeImage(const uint8_t bitmap[], int16_t x, int16_t y, int16_t w, int16_t h, bool invert, bool mirror_y, bool pgm)
 {
   if (_initial_write) writeScreenBuffer(); // initial full screen buffer clean
   delay(1); // yield() to avoid WDT on ESP8266 and ESP32
@@ -219,7 +219,7 @@ void GxEPD2_it60::writeImage(const uint8_t bitmap[], int16_t x, int16_t y, int16
   delay(1); // yield() to avoid WDT on ESP8266 and ESP32
 }
 
-void GxEPD2_it60::writeImagePart(const uint8_t bitmap[], int16_t x_part, int16_t y_part, int16_t w_bitmap, int16_t h_bitmap,
+void GxEPD2_it1404::writeImagePart(const uint8_t bitmap[], int16_t x_part, int16_t y_part, int16_t w_bitmap, int16_t h_bitmap,
                                  int16_t x, int16_t y, int16_t w, int16_t h, bool invert, bool mirror_y, bool pgm)
 {
   if (_initial_write) writeScreenBuffer(); // initial full screen buffer clean
@@ -278,7 +278,7 @@ void GxEPD2_it60::writeImagePart(const uint8_t bitmap[], int16_t x_part, int16_t
   delay(1); // yield() to avoid WDT on ESP8266 and ESP32
 }
 
-void GxEPD2_it60::writeImage(const uint8_t* black, const uint8_t* color, int16_t x, int16_t y, int16_t w, int16_t h, bool invert, bool mirror_y, bool pgm)
+void GxEPD2_it1404::writeImage(const uint8_t* black, const uint8_t* color, int16_t x, int16_t y, int16_t w, int16_t h, bool invert, bool mirror_y, bool pgm)
 {
   if (black)
   {
@@ -286,7 +286,7 @@ void GxEPD2_it60::writeImage(const uint8_t* black, const uint8_t* color, int16_t
   }
 }
 
-void GxEPD2_it60::writeImagePart(const uint8_t* black, const uint8_t* color, int16_t x_part, int16_t y_part, int16_t w_bitmap, int16_t h_bitmap,
+void GxEPD2_it1404::writeImagePart(const uint8_t* black, const uint8_t* color, int16_t x_part, int16_t y_part, int16_t w_bitmap, int16_t h_bitmap,
                                  int16_t x, int16_t y, int16_t w, int16_t h, bool invert, bool mirror_y, bool pgm)
 {
   if (black)
@@ -295,7 +295,7 @@ void GxEPD2_it60::writeImagePart(const uint8_t* black, const uint8_t* color, int
   }
 }
 
-void GxEPD2_it60::writeNative(const uint8_t* data1, const uint8_t* data2, int16_t x, int16_t y, int16_t w, int16_t h, bool invert, bool mirror_y, bool pgm)
+void GxEPD2_it1404::writeNative(const uint8_t* data1, const uint8_t* data2, int16_t x, int16_t y, int16_t w, int16_t h, bool invert, bool mirror_y, bool pgm)
 {
   if (data1)
   {
@@ -350,49 +350,49 @@ void GxEPD2_it60::writeNative(const uint8_t* data1, const uint8_t* data2, int16_
   }
 }
 
-void GxEPD2_it60::drawImage(const uint8_t bitmap[], int16_t x, int16_t y, int16_t w, int16_t h, bool invert, bool mirror_y, bool pgm)
+void GxEPD2_it1404::drawImage(const uint8_t bitmap[], int16_t x, int16_t y, int16_t w, int16_t h, bool invert, bool mirror_y, bool pgm)
 {
   writeImage(bitmap, x, y, w, h, invert, mirror_y, pgm);
   _refresh(x, y, w, h, true);
 }
 
-void GxEPD2_it60::drawImagePart(const uint8_t bitmap[], int16_t x_part, int16_t y_part, int16_t w_bitmap, int16_t h_bitmap,
+void GxEPD2_it1404::drawImagePart(const uint8_t bitmap[], int16_t x_part, int16_t y_part, int16_t w_bitmap, int16_t h_bitmap,
                                 int16_t x, int16_t y, int16_t w, int16_t h, bool invert, bool mirror_y, bool pgm)
 {
   writeImagePart(bitmap, x_part, y_part, w_bitmap, h_bitmap, x, y, w, h, invert, mirror_y, pgm);
   _refresh(x, y, w, h, true);
 }
 
-void GxEPD2_it60::drawImage(const uint8_t* black, const uint8_t* color, int16_t x, int16_t y, int16_t w, int16_t h, bool invert, bool mirror_y, bool pgm)
+void GxEPD2_it1404::drawImage(const uint8_t* black, const uint8_t* color, int16_t x, int16_t y, int16_t w, int16_t h, bool invert, bool mirror_y, bool pgm)
 {
   writeImage(black, color, x, y, w, h, invert, mirror_y, pgm);
   _refresh(x, y, w, h, true);
 }
 
-void GxEPD2_it60::drawImagePart(const uint8_t* black, const uint8_t* color, int16_t x_part, int16_t y_part, int16_t w_bitmap, int16_t h_bitmap,
+void GxEPD2_it1404::drawImagePart(const uint8_t* black, const uint8_t* color, int16_t x_part, int16_t y_part, int16_t w_bitmap, int16_t h_bitmap,
                                 int16_t x, int16_t y, int16_t w, int16_t h, bool invert, bool mirror_y, bool pgm)
 {
   writeImagePart(black, color, x_part, y_part, w_bitmap, h_bitmap, x, y, w, h, invert, mirror_y, pgm);
   _refresh(x, y, w, h, true);
 }
 
-void GxEPD2_it60::drawNative(const uint8_t* data1, const uint8_t* data2, int16_t x, int16_t y, int16_t w, int16_t h, bool invert, bool mirror_y, bool pgm)
+void GxEPD2_it1404::drawNative(const uint8_t* data1, const uint8_t* data2, int16_t x, int16_t y, int16_t w, int16_t h, bool invert, bool mirror_y, bool pgm)
 {
   writeNative(data1, data2, x, y, w, h, invert, mirror_y, pgm);
   _refresh(x, y, w, h, false);
 }
 
-void GxEPD2_it60::refresh(bool partial_update_mode)
+void GxEPD2_it1404::refresh(bool partial_update_mode)
 {
   _refresh(0, 0, WIDTH, HEIGHT, partial_update_mode);
 }
 
-void GxEPD2_it60::refresh(int16_t x, int16_t y, int16_t w, int16_t h)
+void GxEPD2_it1404::refresh(int16_t x, int16_t y, int16_t w, int16_t h)
 {
   _refresh(x, y, w, h, true);
 }
 
-void GxEPD2_it60::_refresh(int16_t x, int16_t y, int16_t w, int16_t h, bool partial_update_mode)
+void GxEPD2_it1404::_refresh(int16_t x, int16_t y, int16_t w, int16_t h, bool partial_update_mode)
 {
   //x -= x % 8; // byte boundary
   //w -= x % 8; // byte boundary
@@ -418,12 +418,12 @@ void GxEPD2_it60::_refresh(int16_t x, int16_t y, int16_t w, int16_t h, bool part
   _waitWhileBusy("refresh", full_refresh_time);
 }
 
-void GxEPD2_it60::powerOff(void)
+void GxEPD2_it1404::powerOff(void)
 {
   _PowerOff();
 }
 
-void GxEPD2_it60::hibernate()
+void GxEPD2_it1404::hibernate()
 {
   if (_power_is_on) _PowerOff();
   if (_rst >= 0)
@@ -436,7 +436,7 @@ void GxEPD2_it60::hibernate()
   }
 }
 
-void GxEPD2_it60::_send8pixel(uint8_t data)
+void GxEPD2_it1404::_send8pixel(uint8_t data)
 {
   for (uint8_t j = 0; j < 8; j++)
   {
@@ -445,7 +445,7 @@ void GxEPD2_it60::_send8pixel(uint8_t data)
   }
 }
 
-void GxEPD2_it60::_setPartialRamArea(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
+void GxEPD2_it1404::_setPartialRamArea(uint16_t x, uint16_t y, uint16_t w, uint16_t h)
 {
   //_IT8951WriteReg(LISAR + 2 , IT8951DevInfo.usImgBufAddrH);
   //_IT8951WriteReg(LISAR , IT8951DevInfo.usImgBufAddrL);
@@ -459,7 +459,7 @@ void GxEPD2_it60::_setPartialRamArea(uint16_t x, uint16_t y, uint16_t w, uint16_
   _writeCommandData16(IT8951_TCON_LD_IMG_AREA , usArg , 5);
 }
 
-void GxEPD2_it60::_PowerOn()
+void GxEPD2_it1404::_PowerOn()
 {
   if (!_power_is_on)
   {
@@ -469,7 +469,7 @@ void GxEPD2_it60::_PowerOn()
   _power_is_on = true;
 }
 
-void GxEPD2_it60::_PowerOff()
+void GxEPD2_it1404::_PowerOff()
 {
   _IT8951StandBy();
   _waitWhileBusy("_PowerOff", power_off_time);
@@ -477,7 +477,7 @@ void GxEPD2_it60::_PowerOff()
   _using_partial_mode = false;
 }
 
-void GxEPD2_it60::_InitDisplay()
+void GxEPD2_it1404::_InitDisplay()
 {
   // we need a long reset pulse
   if (_hibernating && (_rst >= 0))
@@ -489,21 +489,21 @@ void GxEPD2_it60::_InitDisplay()
   }
 }
 
-void GxEPD2_it60::_Init_Full()
+void GxEPD2_it1404::_Init_Full()
 {
   _InitDisplay();
   _PowerOn();
   _using_partial_mode = false;
 }
 
-void GxEPD2_it60::_Init_Part()
+void GxEPD2_it1404::_Init_Part()
 {
   _InitDisplay();
   _PowerOn();
   _using_partial_mode = true;
 }
 
-void GxEPD2_it60::_waitWhileBusy2(const char* comment, uint16_t busy_time)
+void GxEPD2_it1404::_waitWhileBusy2(const char* comment, uint16_t busy_time)
 {
   if (_busy >= 0)
   {
@@ -538,13 +538,13 @@ void GxEPD2_it60::_waitWhileBusy2(const char* comment, uint16_t busy_time)
   else delay(busy_time);
 }
 
-uint16_t GxEPD2_it60::_transfer16(uint16_t value)
+uint16_t GxEPD2_it1404::_transfer16(uint16_t value)
 {
   uint16_t rv = SPI.transfer(value >> 8) << 8;
   return (rv | SPI.transfer(value));
 }
 
-void GxEPD2_it60::_writeCommand16(uint16_t c)
+void GxEPD2_it1404::_writeCommand16(uint16_t c)
 {
   String s = String("_writeCommand16(0x") + String(c, HEX) + String(")");
   _waitWhileBusy2(s.c_str(), default_wait_time);
@@ -558,7 +558,7 @@ void GxEPD2_it60::_writeCommand16(uint16_t c)
   //_waitWhileBusy(s.c_str(), default_wait_time);
 }
 
-void GxEPD2_it60::_writeData16(uint16_t d)
+void GxEPD2_it1404::_writeData16(uint16_t d)
 {
   _waitWhileBusy2("_writeData16", default_wait_time);
   SPI.beginTransaction(_spi_settings);
@@ -570,7 +570,7 @@ void GxEPD2_it60::_writeData16(uint16_t d)
   SPI.endTransaction();
 }
 
-void GxEPD2_it60::_writeData16(const uint16_t* d, uint32_t n)
+void GxEPD2_it1404::_writeData16(const uint16_t* d, uint32_t n)
 {
   _waitWhileBusy2("_writeData16", default_wait_time);
   SPI.beginTransaction(_spi_settings);
@@ -585,7 +585,7 @@ void GxEPD2_it60::_writeData16(const uint16_t* d, uint32_t n)
   SPI.endTransaction();
 }
 
-uint16_t GxEPD2_it60::_readData16()
+uint16_t GxEPD2_it1404::_readData16()
 {
   _waitWhileBusy2("_readData16", default_wait_time);
   SPI.beginTransaction(_spi_settings);
@@ -600,7 +600,7 @@ uint16_t GxEPD2_it60::_readData16()
   return rv;
 }
 
-void GxEPD2_it60::_readData16(uint16_t* d, uint32_t n)
+void GxEPD2_it1404::_readData16(uint16_t* d, uint32_t n)
 {
   _waitWhileBusy2("_readData16", default_wait_time);
   SPI.beginTransaction(_spi_settings);
@@ -618,7 +618,7 @@ void GxEPD2_it60::_readData16(uint16_t* d, uint32_t n)
   SPI.endTransaction();
 }
 
-void GxEPD2_it60::_writeCommandData16(uint16_t c, const uint16_t* d, uint16_t n)
+void GxEPD2_it1404::_writeCommandData16(uint16_t c, const uint16_t* d, uint16_t n)
 {
   _writeCommand16(c);
   for (uint16_t i = 0; i < n; i++)
@@ -627,22 +627,22 @@ void GxEPD2_it60::_writeCommandData16(uint16_t c, const uint16_t* d, uint16_t n)
   }
 }
 
-void GxEPD2_it60::_IT8951SystemRun()
+void GxEPD2_it1404::_IT8951SystemRun()
 {
   _writeCommand16(IT8951_TCON_SYS_RUN);
 }
 
-void GxEPD2_it60::_IT8951StandBy()
+void GxEPD2_it1404::_IT8951StandBy()
 {
   _writeCommand16(IT8951_TCON_STANDBY);
 }
 
-void GxEPD2_it60::_IT8951Sleep()
+void GxEPD2_it1404::_IT8951Sleep()
 {
   _writeCommand16(IT8951_TCON_SLEEP);
 }
 
-uint16_t GxEPD2_it60::_IT8951ReadReg(uint16_t usRegAddr)
+uint16_t GxEPD2_it1404::_IT8951ReadReg(uint16_t usRegAddr)
 {
   uint16_t usData;
 
@@ -654,7 +654,7 @@ uint16_t GxEPD2_it60::_IT8951ReadReg(uint16_t usRegAddr)
   return usData;
 }
 
-void GxEPD2_it60::_IT8951WriteReg(uint16_t usRegAddr, uint16_t usValue)
+void GxEPD2_it1404::_IT8951WriteReg(uint16_t usRegAddr, uint16_t usValue)
 {
   //Send Cmd , Register Address and Write Value
   _writeCommand16(IT8951_TCON_REG_WR);
@@ -662,7 +662,7 @@ void GxEPD2_it60::_IT8951WriteReg(uint16_t usRegAddr, uint16_t usValue)
   _writeData16(usValue);
 }
 
-uint16_t GxEPD2_it60::_IT8951GetVCOM(void)
+uint16_t GxEPD2_it1404::_IT8951GetVCOM(void)
 {
   uint16_t vcom;
 
@@ -674,7 +674,7 @@ uint16_t GxEPD2_it60::_IT8951GetVCOM(void)
   return vcom;
 }
 
-void GxEPD2_it60::_IT8951SetVCOM(uint16_t vcom)
+void GxEPD2_it1404::_IT8951SetVCOM(uint16_t vcom)
 {
   _writeCommand16(USDEF_I80_CMD_VCOM);
   _waitWhileBusy2("_IT8951SetVCOM", default_wait_time);

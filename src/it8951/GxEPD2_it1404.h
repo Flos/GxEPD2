@@ -1,10 +1,10 @@
 // Display Library for SPI e-paper panels from Dalian Good Display and boards from Waveshare.
 // Requires HW SPI and Adafruit_GFX. Caution: these e-papers require 3.3V supply AND data lines!
 //
-// GxEPD2_it60 class is based on Demo Example from Waveshare for Raspberry PI https://github.com/waveshare/IT8951/archive/master.zip
+// GxEPD2_it1404 class is based on Demo Example from Waveshare for Raspberry PI https://github.com/waveshare/IT8951/archive/master.zip
 // Controller: IT8951 : https://www.waveshare.com/w/upload/1/18/IT8951_D_V0.2.4.3_20170728.pdf
 //
-// The GxEPD2_it60 driver class supports the Waveshare e-Paper IT8951 Driver HAT connected with SPI for the ED060SCT 6" e-paper panel (parallel IF)
+// The GxEPD2_it1404 driver class supports the Waveshare e-Paper IT8951 Driver HAT connected with SPI for the ED060SCT 6" e-paper panel (parallel IF)
 // https://www.waveshare.com/product/mini-pc/raspberry-pi/hats/6inch-e-paper-hat.htm
 // This Driver HAT requires 5V power supply but works with 3.3V data lines; requires both MOSI and MISO SPI lines.
 //
@@ -14,12 +14,12 @@
 //
 // Library: https://github.com/ZinggJM/GxEPD2
 
-#ifndef _GxEPD2_it60_H_
-#define _GxEPD2_it60_H_
+#ifndef _GxEPD2_it1404_H_
+#define _GxEPD2_it1404_H_
 
 #include "../GxEPD2_EPD.h"
 
-class GxEPD2_it60 : public GxEPD2_EPD
+class GxEPD2_it1404 : public GxEPD2_EPD
 {
   public:
     // attributes
@@ -40,7 +40,7 @@ class GxEPD2_it60 : public GxEPD2_EPD
     static const uint16_t diag_min_time = 3; // ms, e.g. > refresh_par_time
     static const uint16_t set_vcom_time = 40; // ms, e.g. 37833us
     // constructor
-    GxEPD2_it60(int8_t cs, int8_t dc, int8_t rst, int8_t busy);
+    GxEPD2_it1404(int8_t cs, int8_t dc, int8_t rst, int8_t busy);
     // methods (virtual)
     void init(uint32_t serial_diag_bitrate = 0); // serial_diag_bitrate = 0 : disabled
     void init(uint32_t serial_diag_bitrate, bool initial, bool pulldown_rst_mode = false);
