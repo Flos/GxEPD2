@@ -95,6 +95,12 @@ void GxEPD2_it60::init(uint32_t serial_diag_bitrate, bool initial, bool pulldown
     printf("FW Version = %s\r\n", (uint8_t*)IT8951DevInfo.usFWVersion);
     printf("LUT Version = %s\r\n", (uint8_t*)IT8951DevInfo.usLUTVersion);
   }
+
+  if( IT8951DevInfo.usPanelW != WIDTH ||  IT8951DevInfo.usPanelH != HEIGHT){
+    printf("Warning resolution received from IT8951 missmatches set resolution");
+    printf("Resolution IT8951(%d,%d) != Configured(%d,%d)",  IT8951DevInfo.usPanelW, IT8951DevInfo.usPanelH, WIDTH, HEIGHT);
+  }
+
   //Set to Enable I80 Packed mode
   _IT8951WriteReg(I80CPCR, 0x0001);
   if (VCOM != _IT8951GetVCOM())
