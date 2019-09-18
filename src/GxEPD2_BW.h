@@ -29,6 +29,7 @@
 #include "epd/GxEPD2_750.h"
 //#include "epd/GxEPD2_750_T7.h"
 #include "it8951/GxEPD2_it60.h"
+#include "it8951/GxEPD2_it1404.h"
 
 #ifndef ENABLE_GxEPD2_GFX
 // default is off
